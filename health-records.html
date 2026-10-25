@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Health Records</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #245c4a;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 8px;
+            background: #245c4a;
+            color: white;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        .clear {
+            background: #d9534f;
+        }
+
+        .back {
+            background: #777;
+        }
+
+        .record {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f4f7f9;
+            border-radius: 10px;
+            border-left: 5px solid #245c4a;
+        }
+
+        .record h2 {
+            color: #245c4a;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🏥 Health Records</h1>
+
+    <label>Blood Pressure</label>
+
+    <input
+        type="text"
+        id="bloodPressure"
+        placeholder="Example: 120/80">
+
+
+    <label>Blood Sugar</label>
+
+    <input
+        type="text"
+        id="bloodSugar"
+        placeholder="Example: 100 mg/dL">
+
+
+    <label>Weight</label>
+
+    <input
+        type="text"
+        id="weight"
+        placeholder="Example: 65 kg">
+
+
+    <label>Height</label>
+
+    <input
+        type="text"
+        id="height"
+        placeholder="Example: 165 cm">
+
+
+    <label>Doctor Name</label>
+
+    <input
+        type="text"
+        id="doctor"
+        placeholder="Enter doctor name">
+
+
+    <label>Doctor Notes</label>
+
+    <textarea
+        id="notes"
+        placeholder="Enter doctor notes"></textarea>
+
+
+    <button onclick="saveHealth()">
+        💾 Save Health Record
+    </button>
+
+    <button class="clear" onclick="clearHealth()">
+        🗑 Clear
+    </button>
+
+    <button class="back" onclick="goBack()">
+        ← Back
+    </button>
+
+
+    <div
+        class="record"
+        id="savedRecord"
+        style="display:none;">
+
+        <h2>📋 Saved Health Record</h2>
+
+        <p>
+            <strong>Blood Pressure:</strong>
+            <span id="showBP"></span>
+        </p>
+
+        <p>
+            <strong>Blood Sugar:</strong>
+            <span id="showSugar"></span>
+        </p>
+
+        <p>
+            <strong>Weight:</strong>
+            <span id="showWeight"></span>
+        </p>
+
+        <p>
+            <strong>Height:</strong>
+            <span id="showHeight"></span>
+        </p>
+
+        <p>
+            <strong>Doctor:</strong>
+            <span id="showDoctor"></span>
+        </p>
+
+        <p>
+            <strong>Notes:</strong>
+            <span id="showNotes"></span>
+        </p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function saveHealth() {
+
+    let record = {
+
+        bloodPressure:
+            document.getElementById("bloodPressure").value,
+
+        bloodSugar:
+            document.getElementById("bloodSugar").value,
+
+        weight:
+            document.getElementById("weight").value,
+
+        height:
+            document.getElementById("height").value,
+
+        doctor:
+            document.getElementById("doctor").value,
+
+        notes:
+            document.getElementById("notes").value
+
+    };
+
+
+    localStorage.setItem(
+        "healthRecord",
+        JSON.stringify(record)
+    );
+
+
+    displayHealth(record);
+
+    alert("✅ Health record saved successfully!");
+
+}
+
+
+function displayHealth(record) {
+
+    document.getElementById("showBP").innerText =
+        record.bloodPressure || "Not entered";
+
+    document.getElementById("showSugar").innerText =
+        record.bloodSugar || "Not entered";
+
+    document.getElementById("showWeight").innerText =
+        record.weight || "Not entered";
+
+    document.getElementById("showHeight").innerText =
+        record.height || "Not entered";
+
+    document.getElementById("showDoctor").innerText =
+        record.doctor || "Not entered";
+
+    document.getElementById("showNotes").innerText =
+        record.notes || "Not entered";
+
+
+    document.getElementById("savedRecord").style.display =
+        "block";
+
+}
+
+
+function loadHealth() {
+
+    let saved =
+        localStorage.getItem("healthRecord");
+
+
+    if (saved === null) {
+        return;
+    }
+
+
+    let record =
+        JSON.parse(saved);
+
+
+    document.getElementById("bloodPressure").value =
+        record.bloodPressure;
+
+    document.getElementById("bloodSugar").value =
+        record.bloodSugar;
+
+    document.getElementById("weight").value =
+        record.weight;
+
+    document.getElementById("height").value =
+        record.height;
+
+    document.getElementById("doctor").value =
+        record.doctor;
+
+    document.getElementById("notes").value =
+        record.notes;
+
+
+    displayHealth(record);
+
+}
+
+
+function clearHealth() {
+
+    if (!confirm("Delete saved health record?")) {
+        return;
+    }
+
+
+    localStorage.removeItem("healthRecord");
+
+
+    document.getElementById("bloodPressure").value = "";
+    document.getElementById("bloodSugar").value = "";
+    document.getElementById("weight").value = "";
+    document.getElementById("height").value = "";
+    document.getElementById("doctor").value = "";
+    document.getElementById("notes").value = "";
+
+
+    document.getElementById("savedRecord").style.display =
+        "none";
+
+
+    alert("🗑 Health record cleared.");
+
+}
+
+
+function goBack() {
+
+    window.location.href =
+        "dashboard.html";
+
+}
+
+
+window.onload = function() {
+
+    loadHealth();
+
+};
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Daily Care</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #245c4a;
+        }
+
+        .item {
+            padding: 18px;
+            margin-top: 15px;
+            background: #f4f7f9;
+            border-radius: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: #245c4a;
+            color: white;
+            cursor: pointer;
+        }
+
+        .back {
+            background: #777;
+            margin-left: 10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>📋 Daily Care</h1>
+
+        <div class="item">
+            <input type="checkbox" id="food">
+            <label for="food">🍎 Food Taken</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="water">
+            <label for="water">💧 Water Taken</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="medicine">
+            <label for="medicine">💊 Medicine Taken</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="exercise">
+            <label for="exercise">🚶 Exercise Completed</label>
+        </div>
+
+        <div class="item">
+            <input type="checkbox" id="sleep">
+            <label for="sleep">😴 Good Sleep</label>
+        </div>
+
+        <button onclick="saveCare()">
+            Save Daily Care
+        </button>
+
+        <button class="back" onclick="goBack()">
+            Back
+        </button>
+
+    </div>
+
+
+    <script>
+
+        function saveCare() {
+
+            alert("✅ Daily care information saved!");
+
+        }
+
+
+        function goBack() {
+
+            window.location.href = "dashboard.html";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
