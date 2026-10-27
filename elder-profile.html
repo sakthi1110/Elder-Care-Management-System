@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Elder Profile</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #245c4a;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        textarea {
+            height: 90px;
+            resize: none;
+        }
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: #245c4a;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        button:hover {
+            background: #36775f;
+        }
+
+        .back {
+            background: #777;
+        }
+
+        .clear {
+            background: #d9534f;
+        }
+
+        .saved-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f4f7f9;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .saved-box h2 {
+            color: #245c4a;
+        }
+
+        .saved-box p {
+            margin: 10px 0;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="container">
+
+        <h1>👴 Elder Profile</h1>
+
+
+        <!-- NAME -->
+
+        <label>
+            Elder Name
+        </label>
+
+        <input
+            type="text"
+            id="name"
+            placeholder="Enter elder name">
+
+
+        <!-- DOB -->
+
+        <label>
+            Date of Birth
+        </label>
+
+        <input
+            type="date"
+            id="dob">
+
+
+        <!-- PHONE -->
+
+        <label>
+            Phone Number
+        </label>
+
+        <input
+            type="tel"
+            id="phone"
+            placeholder="Enter phone number">
+
+
+        <!-- BLOOD GROUP -->
+
+        <label>
+            Blood Group
+        </label>
+
+        <select id="blood">
+
+            <option value="">
+                Select blood group
+            </option>
+
+            <option>A+</option>
+            <option>A-</option>
+            <option>B+</option>
+            <option>B-</option>
+            <option>AB+</option>
+            <option>AB-</option>
+            <option>O+</option>
+            <option>O-</option>
+
+        </select>
+
+
+        <!-- ADDRESS -->
+
+        <label>
+            Address
+        </label>
+
+        <textarea
+            id="address"
+            placeholder="Enter address"></textarea>
+
+
+        <!-- MEDICAL CONDITIONS -->
+
+        <label>
+            Medical Conditions
+        </label>
+
+        <textarea
+            id="medical"
+            placeholder="Enter medical conditions"></textarea>
+
+
+        <!-- BUTTONS -->
+
+        <div class="buttons">
+
+            <button onclick="saveProfile()">
+                💾 Save Profile
+            </button>
+
+            <button onclick="loadProfile()">
+                📂 Load Profile
+            </button>
+
+            <button class="clear" onclick="clearProfile()">
+                🗑 Clear
+            </button>
+
+            <button class="back" onclick="goBack()">
+                ← Back
+            </button>
+
+        </div>
+
+
+        <!-- SAVED INFORMATION -->
+
+        <div
+            class="saved-box"
+            id="savedBox">
+
+            <h2>
+                📋 Saved Profile
+            </h2>
+
+            <p>
+                <strong>Name:</strong>
+                <span id="showName"></span>
+            </p>
+
+            <p>
+                <strong>Date of Birth:</strong>
+                <span id="showDob"></span>
+            </p>
+
+            <p>
+                <strong>Phone:</strong>
+                <span id="showPhone"></span>
+            </p>
+
+            <p>
+                <strong>Blood Group:</strong>
+                <span id="showBlood"></span>
+            </p>
+
+            <p>
+                <strong>Address:</strong>
+                <span id="showAddress"></span>
+            </p>
+
+            <p>
+                <strong>Medical Conditions:</strong>
+                <span id="showMedical"></span>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+
+        /* SAVE PROFILE */
+
+        function saveProfile() {
+
+            let name =
+                document.getElementById("name").value;
+
+            let dob =
+                document.getElementById("dob").value;
+
+            let phone =
+                document.getElementById("phone").value;
+
+            let blood =
+                document.getElementById("blood").value;
+
+            let address =
+                document.getElementById("address").value;
+
+            let medical =
+                document.getElementById("medical").value;
+
+
+            if (name === "") {
+
+                alert("Please enter elder name.");
+
+                return;
+            }
+
+
+            let profile = {
+
+                name: name,
+                dob: dob,
+                phone: phone,
+                blood: blood,
+                address: address,
+                medical: medical
+
+            };
+
+
+            localStorage.setItem(
+                "elderProfile",
+                JSON.stringify(profile)
+            );
+
+
+            alert("✅ Elder profile saved successfully!");
+
+
+            displayProfile(profile);
+
+        }
+
+
+
+        /* LOAD PROFILE */
+
+        function loadProfile() {
+
+            let savedData =
+                localStorage.getItem("elderProfile");
+
+
+            if (savedData === null) {
+
+                alert("No saved profile found.");
+
+                return;
+            }
+
+
+            let profile =
+                JSON.parse(savedData);
+
+
+            document.getElementById("name").value =
+                profile.name;
+
+            document.getElementById("dob").value =
+                profile.dob;
+
+            document.getElementById("phone").value =
+                profile.phone;
+
+            document.getElementById("blood").value =
+                profile.blood;
+
+            document.getElementById("address").value =
+                profile.address;
+
+            document.getElementById("medical").value =
+                profile.medical;
+
+
+            displayProfile(profile);
+
+
+            alert("📂 Profile loaded successfully!");
+
+        }
+
+
+
+        /* DISPLAY PROFILE */
+
+        function displayProfile(profile) {
+
+            document.getElementById("showName").innerText =
+                profile.name;
+
+            document.getElementById("showDob").innerText =
+                profile.dob;
+
+            document.getElementById("showPhone").innerText =
+                profile.phone;
+
+            document.getElementById("showBlood").innerText =
+                profile.blood;
+
+            document.getElementById("showAddress").innerText =
+                profile.address;
+
+            document.getElementById("showMedical").innerText =
+                profile.medical;
+
+
+            document.getElementById("savedBox").style.display =
+                "block";
+
+        }
+
+
+
+        /* CLEAR PROFILE */
+
+        function clearProfile() {
+
+            let confirmDelete =
+                confirm(
+                    "Are you sure you want to clear the saved profile?"
+                );
+
+
+            if (confirmDelete) {
+
+                localStorage.removeItem("elderProfile");
+
+
+                document.getElementById("name").value = "";
+
+                document.getElementById("dob").value = "";
+
+                document.getElementById("phone").value = "";
+
+                document.getElementById("blood").value = "";
+
+                document.getElementById("address").value = "";
+
+                document.getElementById("medical").value = "";
+
+
+                document.getElementById("savedBox").style.display =
+                    "none";
+
+
+                alert("🗑 Profile cleared.");
+
+            }
+
+        }
+
+
+
+        /* BACK TO DASHBOARD */
+
+        function goBack() {
+
+            window.location.href =
+                "dashboard.html";
+
+        }
+
+
+        /* AUTOMATICALLY LOAD SAVED DATA */
+
+        window.onload = function () {
+
+            let savedData =
+                localStorage.getItem("elderProfile");
+
+
+            if (savedData !== null) {
+
+                let profile =
+                    JSON.parse(savedData);
+
+                document.getElementById("name").value =
+                    profile.name;
+
+                document.getElementById("dob").value =
+                    profile.dob;
+
+                document.getElementById("phone").value =
+                    profile.phone;
+
+                document.getElementById("blood").value =
+                    profile.blood;
+
+                document.getElementById("address").value =
+                    profile.address;
+
+                document.getElementById("medical").value =
+                    profile.medical;
+
+
+                displayProfile(profile);
+
+            }
+
+        };
+
+
+    </script>
+
+
+</body>
+
+</html>

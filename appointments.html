@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Appointments</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #245c4a;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        textarea {
+            height: 80px;
+            resize: none;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 8px;
+            background: #245c4a;
+            color: white;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        .clear {
+            background: #d9534f;
+        }
+
+        .back {
+            background: #777;
+        }
+
+        .appointment {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f4f7f9;
+            border-radius: 10px;
+            border-left: 5px solid #245c4a;
+        }
+
+        .appointment h2 {
+            color: #245c4a;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>👨‍⚕️ Doctor Appointments</h1>
+
+
+    <label>Doctor Name</label>
+
+    <input
+        type="text"
+        id="doctor"
+        placeholder="Enter doctor name">
+
+
+    <label>Hospital / Clinic</label>
+
+    <input
+        type="text"
+        id="hospital"
+        placeholder="Enter hospital name">
+
+
+    <label>Appointment Date</label>
+
+    <input
+        type="date"
+        id="date">
+
+
+    <label>Appointment Time</label>
+
+    <input
+        type="time"
+        id="time">
+
+
+    <label>Reason</label>
+
+    <textarea
+        id="reason"
+        placeholder="Reason for appointment"></textarea>
+
+
+    <button onclick="saveAppointment()">
+        💾 Save Appointment
+    </button>
+
+    <button class="clear" onclick="clearAppointment()">
+        🗑 Clear
+    </button>
+
+    <button class="back" onclick="goBack()">
+        ← Back
+    </button>
+
+
+    <div
+        class="appointment"
+        id="savedAppointment"
+        style="display:none;">
+
+        <h2>📅 Saved Appointment</h2>
+
+        <p>
+            <strong>Doctor:</strong>
+            <span id="showDoctor"></span>
+        </p>
+
+        <p>
+            <strong>Hospital:</strong>
+            <span id="showHospital"></span>
+        </p>
+
+        <p>
+            <strong>Date:</strong>
+            <span id="showDate"></span>
+        </p>
+
+        <p>
+            <strong>Time:</strong>
+            <span id="showTime"></span>
+        </p>
+
+        <p>
+            <strong>Reason:</strong>
+            <span id="showReason"></span>
+        </p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function saveAppointment() {
+
+    let doctor =
+        document.getElementById("doctor").value;
+
+    let hospital =
+        document.getElementById("hospital").value;
+
+    let date =
+        document.getElementById("date").value;
+
+    let time =
+        document.getElementById("time").value;
+
+    let reason =
+        document.getElementById("reason").value;
+
+
+    if (
+        doctor === "" ||
+        date === "" ||
+        time === ""
+    ) {
+
+        alert(
+            "Please enter doctor, date and time."
+        );
+
+        return;
+
+    }
+
+
+    let appointment = {
+
+        doctor: doctor,
+
+        hospital: hospital,
+
+        date: date,
+
+        time: time,
+
+        reason: reason
+
+    };
+
+
+    localStorage.setItem(
+        "appointment",
+        JSON.stringify(appointment)
+    );
+
+
+    displayAppointment(appointment);
+
+
+    alert(
+        "✅ Appointment saved successfully!"
+    );
+
+}
+
+
+function displayAppointment(appointment) {
+
+    document.getElementById("showDoctor").innerText =
+        appointment.doctor;
+
+    document.getElementById("showHospital").innerText =
+        appointment.hospital || "Not entered";
+
+    document.getElementById("showDate").innerText =
+        appointment.date;
+
+    document.getElementById("showTime").innerText =
+        appointment.time;
+
+    document.getElementById("showReason").innerText =
+        appointment.reason || "Not entered";
+
+
+    document.getElementById("savedAppointment").style.display =
+        "block";
+
+}
+
+
+function loadAppointment() {
+
+    let saved =
+        localStorage.getItem("appointment");
+
+
+    if (saved === null) {
+        return;
+    }
+
+
+    let appointment =
+        JSON.parse(saved);
+
+
+    document.getElementById("doctor").value =
+        appointment.doctor;
+
+    document.getElementById("hospital").value =
+        appointment.hospital;
+
+    document.getElementById("date").value =
+        appointment.date;
+
+    document.getElementById("time").value =
+        appointment.time;
+
+    document.getElementById("reason").value =
+        appointment.reason;
+
+
+    displayAppointment(appointment);
+
+}
+
+
+function clearAppointment() {
+
+    if (!confirm("Delete saved appointment?")) {
+        return;
+    }
+
+
+    localStorage.removeItem("appointment");
+
+
+    document.getElementById("doctor").value = "";
+    document.getElementById("hospital").value = "";
+    document.getElementById("date").value = "";
+    document.getElementById("time").value = "";
+    document.getElementById("reason").value = "";
+
+
+    document.getElementById("savedAppointment").style.display =
+        "none";
+
+
+    alert("🗑 Appointment cleared.");
+
+}
+
+
+function goBack() {
+
+    window.location.href =
+        "dashboard.html";
+
+}
+
+
+window.onload = function() {
+
+    loadAppointment();
+
+};
+
+</script>
+
+</body>
+
+</html>

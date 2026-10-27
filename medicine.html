@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medicine Reminder</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #245c4a;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 8px;
+            background: #245c4a;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        button:hover {
+            background: #36775f;
+        }
+
+        .back {
+            background: #777;
+        }
+
+        .clear {
+            background: #d9534f;
+        }
+
+        .medicine-list {
+            margin-top: 30px;
+        }
+
+        .medicine-card {
+            background: #f4f7f9;
+            padding: 18px;
+            margin-top: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #245c4a;
+        }
+
+        .medicine-card h3 {
+            color: #245c4a;
+            margin-bottom: 10px;
+        }
+
+        .delete-btn {
+            background: #d9534f;
+            padding: 8px 15px;
+            margin-top: 10px;
+        }
+
+        .empty {
+            color: #777;
+            padding: 15px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h1>💊 Medicine Reminder</h1>
+
+
+        <!-- MEDICINE NAME -->
+
+        <label>
+            Medicine Name
+        </label>
+
+        <input
+            type="text"
+            id="medicineName"
+            placeholder="Enter medicine name">
+
+
+        <!-- DOSAGE -->
+
+        <label>
+            Dosage
+        </label>
+
+        <input
+            type="text"
+            id="dosage"
+            placeholder="Example: 1 tablet">
+
+
+        <!-- TIME -->
+
+        <label>
+            Medicine Time
+        </label>
+
+        <input
+            type="time"
+            id="medicineTime">
+
+
+        <!-- FREQUENCY -->
+
+        <label>
+            Frequency
+        </label>
+
+        <select id="frequency">
+
+            <option value="">
+                Select frequency
+            </option>
+
+            <option>
+                Once a day
+            </option>
+
+            <option>
+                Twice a day
+            </option>
+
+            <option>
+                Three times a day
+            </option>
+
+            <option>
+                As needed
+            </option>
+
+        </select>
+
+
+        <!-- TYPE -->
+
+        <label>
+            Medicine Type
+        </label>
+
+        <select id="medicineType">
+
+            <option>Tablet</option>
+            <option>Capsule</option>
+            <option>Syrup</option>
+            <option>Injection</option>
+            <option>Other</option>
+
+        </select>
+
+
+        <!-- BUTTONS -->
+
+        <button onclick="saveMedicine()">
+            💾 Save Medicine
+        </button>
+
+        <button class="clear" onclick="clearMedicines()">
+            🗑 Clear All
+        </button>
+
+        <button class="back" onclick="goBack()">
+            ← Back
+        </button>
+
+
+        <!-- MEDICINE LIST -->
+
+        <div class="medicine-list">
+
+            <h2>
+                📋 Saved Medicines
+            </h2>
+
+            <div id="medicineList">
+
+                <p class="empty">
+                    No medicines added yet.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+
+        /* GET SAVED MEDICINES */
+
+        function getMedicines() {
+
+            let saved =
+                localStorage.getItem("medicines");
+
+            if (saved === null) {
+
+                return [];
+
+            }
+
+            return JSON.parse(saved);
+
+        }
+
+
+
+        /* SAVE MEDICINE */
+
+        function saveMedicine() {
+
+            let name =
+                document.getElementById("medicineName").value;
+
+            let dosage =
+                document.getElementById("dosage").value;
+
+            let time =
+                document.getElementById("medicineTime").value;
+
+            let frequency =
+                document.getElementById("frequency").value;
+
+            let type =
+                document.getElementById("medicineType").value;
+
+
+            if (
+                name === "" ||
+                dosage === "" ||
+                time === "" ||
+                frequency === ""
+            ) {
+
+                alert("Please fill all medicine details.");
+
+                return;
+
+            }
+
+
+            let medicines =
+                getMedicines();
+
+
+            let medicine = {
+
+                id: Date.now(),
+
+                name: name,
+
+                dosage: dosage,
+
+                time: time,
+
+                frequency: frequency,
+
+                type: type
+
+            };
+
+
+            medicines.push(medicine);
+
+
+            localStorage.setItem(
+                "medicines",
+                JSON.stringify(medicines)
+            );
+
+
+            alert("✅ Medicine saved successfully!");
+
+
+            clearForm();
+
+            displayMedicines();
+
+        }
+
+
+
+        /* DISPLAY MEDICINES */
+
+        function displayMedicines() {
+
+            let medicines =
+                getMedicines();
+
+            let list =
+                document.getElementById("medicineList");
+
+
+            if (medicines.length === 0) {
+
+                list.innerHTML =
+                    '<p class="empty">No medicines added yet.</p>';
+
+                return;
+
+            }
+
+
+            list.innerHTML = "";
+
+
+            medicines.forEach(function(medicine) {
+
+                let card =
+                    document.createElement("div");
+
+                card.className =
+                    "medicine-card";
+
+
+                card.innerHTML = `
+
+                    <h3>
+                        💊 ${medicine.name}
+                    </h3>
+
+                    <p>
+                        <strong>Dosage:</strong>
+                        ${medicine.dosage}
+                    </p>
+
+                    <p>
+                        <strong>Time:</strong>
+                        ${medicine.time}
+                    </p>
+
+                    <p>
+                        <strong>Frequency:</strong>
+                        ${medicine.frequency}
+                    </p>
+
+                    <p>
+                        <strong>Type:</strong>
+                        ${medicine.type}
+                    </p>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteMedicine(${medicine.id})">
+
+                        🗑 Delete
+
+                    </button>
+
+                `;
+
+
+                list.appendChild(card);
+
+            });
+
+        }
+
+
+
+        /* DELETE ONE MEDICINE */
+
+        function deleteMedicine(id) {
+
+            let confirmDelete =
+                confirm(
+                    "Are you sure you want to delete this medicine?"
+                );
+
+
+            if (!confirmDelete) {
+
+                return;
+
+            }
+
+
+            let medicines =
+                getMedicines();
+
+
+            medicines =
+                medicines.filter(function(medicine) {
+
+                    return medicine.id !== id;
+
+                });
+
+
+            localStorage.setItem(
+                "medicines",
+                JSON.stringify(medicines)
+            );
+
+
+            displayMedicines();
+
+
+            alert("🗑 Medicine deleted.");
+
+        }
+
+
+
+        /* CLEAR ALL */
+
+        function clearMedicines() {
+
+            let medicines =
+                getMedicines();
+
+
+            if (medicines.length === 0) {
+
+                alert("No medicines to clear.");
+
+                return;
+
+            }
+
+
+            let confirmDelete =
+                confirm(
+                    "Are you sure you want to delete all medicines?"
+                );
+
+
+            if (confirmDelete) {
+
+                localStorage.removeItem("medicines");
+
+                displayMedicines();
+
+                alert("🗑 All medicines cleared.");
+
+            }
+
+        }
+
+
+
+        /* CLEAR INPUT FORM */
+
+        function clearForm() {
+
+            document.getElementById("medicineName").value = "";
+
+            document.getElementById("dosage").value = "";
+
+            document.getElementById("medicineTime").value = "";
+
+            document.getElementById("frequency").value = "";
+
+            document.getElementById("medicineType").value =
+                "Tablet";
+
+        }
+
+
+
+        /* BACK */
+
+        function goBack() {
+
+            window.location.href =
+                "dashboard.html";
+
+        }
+
+
+
+        /* LOAD WHEN PAGE OPENS */
+
+        window.onload = function() {
+
+            displayMedicines();
+
+        };
+
+
+    </script>
+
+</body>
+
+</html>
